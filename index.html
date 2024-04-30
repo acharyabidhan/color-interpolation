@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas width="1000" height="500" id="canvas"></canvas>
+    <script>
+
+        const canvasWidth = 1000;
+        const canvasHeight = 500;
+
+        const firstStartPoint = [255, 0, 0];
+        const firstEndPoint = [0, 255, 0];
+
+        const secondStartPoint = firstEndPoint;
+        const secondEndPoint = [0, 0, 255];
+
+        const thirdStartPoint = secondEndPoint;
+        const thirdEndPoint = firstStartPoint;
+
+        const totalColors = 3;
+        const widthForEachColor = Math.floor(canvasWidth / totalColors);
+
+        const allColorPoints = [[firstStartPoint, firstEndPoint], [secondStartPoint, secondEndPoint], [thirdStartPoint, thirdEndPoint]];
+
+        function generateIntermediateColors() {
+            const finalIntermediateColors = [];
+            for (var i = 0; i < totalColors; i++) {
+                const colorPoints = allColorPoints[i];
+                const startColor = colorPoints[0];
+                const endColor = colorPoints[1];
+                for (var j = 0; j < widthForEachColor; j++) {
+                    var r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * (j / widthForEachColor));
+                    var g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * (j / widthForEachColor));
+                    var b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * (j / widthForEachColor));
+                    finalIntermediateColors.push([r, g, b]);
+                }
+            }
+            return finalIntermediateColors;
+        }
+
+        const colors = generateIntermediateColors();
+
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx.lineWidth = 1;
+
+        const newWidth = widthForEachColor * 3;
+
+        for (var k = 0; k < newWidth; k++) {
+            const color = colors[k];
+            ctx.strokeStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            var startX = k;
+            var startY = 0;
+            var endX = k;
+            var endY = canvasHeight;
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+        }
+        
+    </script>
+</body>
+</html>
